@@ -1,0 +1,515 @@
+---
+openapi: 3.1.0
+info:
+  title: Survey Template Management API
+  description: API to manage survey questions .
+  version: 1.0.0
+paths:
+  "/":
+    get:
+      tags:
+      - Root
+      summary: Check API status
+      description: |-
+        Check the status of the API.
+
+        Returns:
+            dict: A JSON response indicating that the API is up and running.
+      operationId: read_root__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  "/survey":
+    get:
+      tags:
+      - Survey
+      summary: Get survey questions
+      description: |-
+        Get the survey questions.
+
+        Returns:
+            dict: A deep copy of the survey template.
+      operationId: get_survey_survey_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Survey"
+  "/add-section":
+    post:
+      summary: Add Section
+      description: |-
+        Add a new section to the survey template.
+
+        Args:
+            new_section (SectionUpdate): The new section to be added.
+
+        Returns:
+            dict: A message indicating that the section was added successfully.
+
+        Raises:
+            HTTPException: If an error occurs while adding the new section.
+      operationId: add_section_add_section_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/SectionUpdate"
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/update-section/{section_name}":
+    put:
+      summary: Update Section
+      description: |-
+        Update a section in the survey template.
+
+        Args:
+            section_name (str): The name of the section to be updated.
+            section_data (SectionUpdate): The updated section data.
+
+        Returns:
+            dict: A message indicating that the section was updated successfully.
+
+        Raises:
+            HTTPException: If an error occurs while updating the section.
+      operationId: update_section_update_section__section_name__put
+      parameters:
+      - name: section_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Section Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/SectionUpdate"
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/delete-section/{section_name}":
+    delete:
+      summary: Delete Section
+      description: |-
+        Delete a section from the survey template.
+
+        Args:
+            section_name (str): The name of the section to be deleted.
+
+        Returns:
+            dict: A message indicating that the section was deleted successfully.
+
+        Raises:
+            HTTPException: If an error occurs while deleting the section.
+      operationId: delete_section_delete_section__section_name__delete
+      parameters:
+      - name: section_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Section Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/delete-question/{section_name}/{question_idx}":
+    delete:
+      summary: Delete Question
+      description: |-
+        Delete a question from a section in the survey template.
+
+        Args:
+            section_name (str): The name of the section containing the question.
+            question_idx (int): The index of the question to be deleted.
+
+        Returns:
+            dict: A message indicating that the question was deleted successfully.
+
+        Raises:
+            HTTPException: If an error occurs while deleting the question.
+      operationId: delete_question_delete_question__section_name___question_idx__delete
+      parameters:
+      - name: section_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Section Name
+      - name: question_idx
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Question Idx
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/add-question/{section_name}":
+    post:
+      summary: Add Question
+      description: |-
+        Add a new question to a section in the survey template.
+
+        Args:
+            section_name (str): The name of the section to add the question to.
+            new_question (QuestionCreate): The new question to be added.
+
+        Returns:
+            dict: A message indicating that the question was added successfully.
+
+        Raises:
+            HTTPException: If an error occurs while adding the question.
+      operationId: add_question_add_question__section_name__post
+      parameters:
+      - name: section_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Section Name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/QuestionCreate"
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/update-question/{section_name}/{question_idx}":
+    put:
+      summary: Update Question
+      description: |-
+        Update a question in a section of the survey template.
+
+        Args:
+            section_name (str): The name of the section containing the question.
+            question_idx (int): The index of the question to be updated.
+            updated_question (QuestionCreate): The updated question data.
+
+        Returns:
+            dict: A message indicating that the question was updated successfully.
+
+        Raises:
+            HTTPException: If an error occurs while updating the question.
+      operationId: update_question_update_question__section_name___question_idx__put
+      parameters:
+      - name: section_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Section Name
+      - name: question_idx
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Question Idx
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/QuestionCreate"
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/get-question/{section_name}/{question_idx}":
+    get:
+      summary: Get Question
+      description: |-
+        Get a question from a section in the survey template.
+
+        Args:
+            section_name (str): The name of the section containing the question.
+            question_idx (int): The index of the question to be retrieved.
+
+        Returns:
+            dict: The question data.
+
+        Raises:
+            HTTPException: If an error occurs while getting the question.
+      operationId: get_question_get_question__section_name___question_idx__get
+      parameters:
+      - name: section_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Section Name
+      - name: question_idx
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Question Idx
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/get-section/{section_name}":
+    get:
+      summary: Get Section
+      description: |-
+        Get a section from the survey template.
+
+        Args:
+            section_name (str): The name of the section to be retrieved.
+
+        Returns:
+            dict: The section data.
+
+        Raises:
+            HTTPException: If an error occurs while getting the section.
+      operationId: get_section_get_section__section_name__get
+      parameters:
+      - name: section_name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Section Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/get-sections":
+    get:
+      summary: Get Sections
+      description: |-
+        Get all sections from the survey template.
+
+        Returns:
+            list: The list of sections in the survey template.
+
+        Raises:
+            HTTPException: If an error occurs while getting the sections.
+      operationId: get_sections_get_sections_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            "$ref": "#/components/schemas/ValidationError"
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    Question:
+      properties:
+        type:
+          type: string
+          title: Type
+        question:
+          type: string
+          title: Question
+        options:
+          items:
+            type: string
+          type: array
+          title: Options
+      type: object
+      required:
+      - type
+      - question
+      - options
+      title: Question
+      description: |-
+        Represents a question in a survey.
+
+        Attributes:
+            type (str): The type of the question.
+            question (str): The text of the question.
+            options (List[str]): The list of options for the question.
+    QuestionCreate:
+      properties:
+        type:
+          type: string
+          title: Type
+        question:
+          type: string
+          title: Question
+        options:
+          items:
+            type: string
+          type: array
+          title: Options
+      type: object
+      required:
+      - type
+      - question
+      - options
+      title: QuestionCreate
+      description: |-
+        Represents a question for creating new sections.
+
+        Attributes:
+            type (str): The type of the question.
+            question (str): The text of the question.
+            options (List[str]): The list of options for the question.
+    Section:
+      properties:
+        section:
+          type: string
+          title: Section
+        questions:
+          items:
+            "$ref": "#/components/schemas/Question"
+          type: array
+          title: Questions
+      type: object
+      required:
+      - section
+      - questions
+      title: Section
+      description: |-
+        Represents a section in a survey.
+
+        Attributes:
+            section (str): The name of the section.
+            questions (List[Question]): The list of questions in the section.
+    SectionUpdate:
+      properties:
+        section:
+          type: string
+          title: Section
+        questions:
+          items:
+            "$ref": "#/components/schemas/QuestionCreate"
+          type: array
+          title: Questions
+      type: object
+      required:
+      - section
+      - questions
+      title: SectionUpdate
+      description: |-
+        Represents an update for a section.
+
+        Attributes:
+            section (str): The name of the section.
+            questions (List[QuestionCreate]): The list of questions for the section.
+    Survey:
+      properties:
+        survey:
+          items:
+            "$ref": "#/components/schemas/Section"
+          type: array
+          title: Survey
+      type: object
+      required:
+      - survey
+      title: Survey
+      description: |-
+        Represents a survey.
+
+        Attributes:
+            survey (List[Section]): The list of sections in the survey.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
